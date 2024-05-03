@@ -1,14 +1,15 @@
 import openai
-from keys import OPENAI_API_KEY
+from openai import BadRequestError, OpenAI, AzureOpenAI
+from keys import AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_DEPLOYMENT, AZURE_OPENAI_API_VERSION
 from prompts import create_prompt, INITIAL_RESPONSE
 import time
 
-openai.api_key = OPENAI_API_KEY
-
+# openai.api_key = OPENAI_API_KEY
+client = AzureOpenAI(api_key=AZURE_OPENAI_API_KEY,azure_endpoint=AZURE_OPENAI_ENDPOINT, api_version= AZURE_OPENAI_API_VERSION)
 def generate_response_from_transcript(transcript):
     try:
-        response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo-0301",
+        response = client.chat.Completions.create(
+                model=AZURE_OPENAI_DEPLOYMENT,
                 messages=[{"role": "system", "content": create_prompt(transcript)}],
                 temperature = 0.0
         )
